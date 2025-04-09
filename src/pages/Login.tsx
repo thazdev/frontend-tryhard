@@ -1,7 +1,28 @@
+import { useNavigate } from "react-router-dom";
+import { FormEvent, useState } from "react";
 import AuthCard from "../components/AuthCard";
 import { FaGithub, FaTwitter } from "react-icons/fa";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
+
+    const handleLogin = async (e: FormEvent) => {
+        e.preventDefault();
+        try {
+          await login(email, password);
+          navigate("/dashboard");
+        } catch (error) {
+          console.error("Erro ao fazer login:", error);
+        }
+      };
+      
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-[#0A0E1A] relative overflow-hidden">
             <div
@@ -14,7 +35,14 @@ export default function Login() {
                 }}
             ></div>
             <div className="relative z-10 flex flex-col items-center w-full max-w-md">
-                <AuthCard />
+                <AuthCard
+                    email={email}
+                    setEmail={setEmail}
+                    password={password}
+                    setPassword={setPassword}
+                    error={error}
+                    handleSubmit={handleLogin}
+                />
                 <div className="flex justify-center gap-6 mt-6 w-full">
                     <a href="https://github.com/thazdev" target="_blank" rel="noopener noreferrer">
                         <FaGithub className="text-[#004AAD] text-3xl hover:scale-110 transition-transform" />
@@ -25,6 +53,5 @@ export default function Login() {
                 </div>
             </div>
         </div>
-
-    )
+    );
 }

@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import React, { FormEvent } from "react";
+import { AuthCardProps } from '../types/AuthCardProps';
 
 export default function AuthCard({ 
   isRegister = false, 
@@ -7,7 +9,7 @@ export default function AuthCard({
   password, setPassword, 
   confirmPassword, setConfirmPassword, 
   error, handleSubmit 
-}) {
+}: AuthCardProps) {
   return (
     <div className="bg-[#1C2230] border border-gray-700 p-8 rounded-lg shadow-2xl w-full max-w-md">
       <h2 className="text-white text-2xl font-semibold text-center mb-6">

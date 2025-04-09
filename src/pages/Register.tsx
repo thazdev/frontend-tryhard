@@ -1,29 +1,30 @@
 import { useState } from "react";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import AuthCard from "../components/AuthCard";
-import { registerUser } from "../services/api"; // Função que envia dados para o backend
+import { registerUser } from "../services/api"; 
 import { useNavigate } from "react-router-dom";
+import { FormEvent } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       setError("As senhas não coincidem!");
       return;
     }
-
     try {
       await registerUser({ email, username, password });
-      alert("Conta criada com sucesso!");
-      navigate("/login");
+      await login(email, password)
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Erro ao registrar.");
     }
